@@ -14,7 +14,7 @@ Encryptor::~Encryptor()
 {
 }
 
-char * Encryptor::encrypt(char key[], char * rawData)
+char * Encryptor::encryptXOR(char key[], char * rawData)
 {
 	cout << "Debugging" << endl;
 	int keyLength = sizeof(key);
@@ -34,6 +34,7 @@ char * Encryptor::encrypt(char key[], char * rawData)
 	}
 	cout << encData << endl;
 	//return encData;
+
 	return __nullptr;
 }
 
