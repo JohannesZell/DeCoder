@@ -4,11 +4,11 @@
 //#include "Source.h"
 using namespace std;
 
-
-char selection;
-Encryptor* encryptor = new Encryptor();
 void encrypt();
 void decrypt();
+char selection;
+Encryptor* encryptor = new Encryptor();
+
 void main() {
 	cout << "________         _________            .___            " << endl;
 	cout << "\\______ \\   ____ \\_   ___ \\  ____   __| _/___________ " << endl;
@@ -22,10 +22,9 @@ void main() {
 	switch (selection)
 	{
 	case '1':
-		cout << endl << "Debug2";
 		encrypt();
 		break;
-	case 2:
+	case '2':
 		decrypt();
 	default:
 		break;
@@ -37,10 +36,10 @@ void main() {
 
 void encrypt()
 {
-	char abc[] = { 'c' };
-	char key[] = { 'f' };
 	char filename;
 	char encryptionMethod;
+	char abc[] = { 'a' };
+	char key[] = { 'f' };
 
 	cout << "Enter path + filename to encrypt the file: ";
 	cin >> filename;
@@ -54,10 +53,11 @@ void encrypt()
 	cin >> encryptionMethod;
 	switch (encryptionMethod)
 	{
-	case 1:
-		encryptor->encryptXOR(key, abc );
+	case '1':
+		cout << "Hallo" << endl;
+		encryptor->encrypt(key, abc);
 		break;
-	case 2:
+	case '2':
 
 		break;
 	default:
