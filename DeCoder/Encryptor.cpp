@@ -16,7 +16,7 @@ Encryptor::~Encryptor()
 
 char * Encryptor::encrypt(char key[], char * rawData)
 {
-	int keyLength = sizeof(key);
+	/*int keyLength = sizeof(key);
 	int remainingData = strlen(rawData);
 	char * encData;
 	int step = 0;
@@ -31,6 +31,7 @@ char * Encryptor::encrypt(char key[], char * rawData)
 		step = step + keyLength;
 	}
 
-	return encData;
+	return encData;*/
+	return __nullptr;
 }
 
