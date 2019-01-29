@@ -4,7 +4,8 @@
 //#include "Source.h"
 using namespace std;
 
-
+void encrypt();
+void decrypt();
 char selection;
 Encryptor* encryptor = new Encryptor();
 
@@ -20,10 +21,10 @@ void main() {
 	cin >> selection;
 	switch (selection)
 	{
-	case 1:
+	case '1':
 		encrypt();
 		break;
-	case 2:
+	case '2':
 		decrypt();
 	default:
 		break;
@@ -37,6 +38,8 @@ void encrypt()
 {
 	char filename;
 	char encryptionMethod;
+	char abc[] = { 'a' };
+	char key[] = { 'f' };
 
 	cout << "Enter path + filename to encrypt the file: ";
 	cin >> filename;
@@ -50,10 +53,11 @@ void encrypt()
 	cin >> encryptionMethod;
 	switch (encryptionMethod)
 	{
-	case 1:
-		encryptor->encrypt();
+	case '1':
+		cout << "Hallo" << endl;
+		encryptor->encrypt(key, abc);
 		break;
-	case 2:
+	case '2':
 
 		break;
 	default:
