@@ -7,7 +7,8 @@ using namespace std;
 
 char selection;
 Encryptor* encryptor = new Encryptor();
-
+void encrypt();
+void decrypt();
 void main() {
 	cout << "________         _________            .___            " << endl;
 	cout << "\\______ \\   ____ \\_   ___ \\  ____   __| _/___________ " << endl;
@@ -20,7 +21,8 @@ void main() {
 	cin >> selection;
 	switch (selection)
 	{
-	case 1:
+	case '1':
+		cout << endl << "Debug2";
 		encrypt();
 		break;
 	case 2:
@@ -35,6 +37,8 @@ void main() {
 
 void encrypt()
 {
+	char abc[] = { 'c' };
+	char key[] = { 'f' };
 	char filename;
 	char encryptionMethod;
 
@@ -51,7 +55,7 @@ void encrypt()
 	switch (encryptionMethod)
 	{
 	case 1:
-		encryptor->encrypt();
+		encryptor->encryptXOR(key, abc );
 		break;
 	case 2:
 
