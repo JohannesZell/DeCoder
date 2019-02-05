@@ -59,10 +59,10 @@ void encrypt()
 	{
 	case '1':
 		cout << "Hallo" << endl;
-		encryptor->encryptXOR(key, abc);
+		encryptor->encryptAES(abc);
 		break;
 	case '2':
-		encryptor->encryptAES();
+		//encryptor->encryptAES();
 		break;
 	case '3':
 		//encryptor->cesarEncryption();

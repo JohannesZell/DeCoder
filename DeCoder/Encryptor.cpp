@@ -1,17 +1,10 @@
 #include "Encryptor.h"
 #include <iostream>
 #include <string.h>
+#include "dll.h"
 
 using namespace std;
 using namespace CryptoPP;
-
-char ch;
-
-//Array for PIN
-int cool[5];
-
-//Counter for looping the array
-int cc;
 
 
 Encryptor::Encryptor()
@@ -46,4 +39,38 @@ char * Encryptor::encryptXOR(char key[], char * rawData)
 
 	return __nullptr;
 }
+//CryptoPP::AESEncryption
 
+
+char * Encryptor::encryptAES(char * rawData)
+{
+	AutoSeededRandomPool rnd;
+
+	// Generate a random key
+	SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
+	rnd.GenerateBlock(key, key.size());
+
+	// Generate a random IV
+	SecByteBlock iv(AES::BLOCKSIZE);
+	rnd.GenerateBlock(iv, iv.size());
+
+	byte plainText[] = "Hello! How are you.";
+	size_t messageLen = std::strlen((char*)plainText) + 1;
+
+	//////////////////////////////////////////////////////////////////////////
+	// Encrypt
+
+	CFB_Mode<AES>::Encryption cfbEncryption(key, key.size(), iv);
+	cfbEncryption.ProcessData(plainText, plainText, messageLen);
+
+	cout << plainText << endl;
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// Decrypt
+
+	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(), iv);
+	cfbDecryption.ProcessData(plainText, plainText, messageLen);
+	cout << plainText;
+	return nullptr;
+}
