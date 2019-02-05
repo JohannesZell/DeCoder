@@ -57,7 +57,8 @@ void encrypt()
 	{
 	case '1':
 		cout << "Hallo" << endl;
-		encryptor->encryptXOR(key, abc);
+		//encryptor->encryptXOR(key, abc);
+		encryptor->encryptAES(abc);
 		break;
 	case '2':
 
