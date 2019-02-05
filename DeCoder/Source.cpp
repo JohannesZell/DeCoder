@@ -8,10 +8,12 @@ using namespace std;
 
 void encrypt();
 void decrypt();
-char selection;
+
 Encryptor* encryptor = new Encryptor();
 
 void main() {
+	char selection;
+
 	cout << "________         _________            .___            " << endl;
 	cout << "\\______ \\   ____ \\_   ___ \\  ____   __| _/___________ " << endl;
 	cout << " |    |  \\_/ __ \\/    \\  \\/ /  _ \\ / __ |/ __ \\_  __ \\" << endl;
@@ -31,7 +33,6 @@ void main() {
 	default:
 		break;
 	}
-	//Hallo
 	system("pause");
 }
 
@@ -45,25 +46,28 @@ void encrypt()
 
 	cout << "Enter path + filename to encrypt the file: ";
 	cin >> filename;
-	cin.clear(); cin.ignore(INT_MAX, '\n');
-	/*if (strlen(filename) == 0) {
+	cin.clear(); 
+	cin.ignore(INT_MAX, '\n');
 
-	}*/
 	cout << "Please choose an encryption method (1-3)" << endl;
 	cout << "1) XOR" << endl;
 	cout << "2) AES encryption" << endl;
+	cout << "3) Cesar encryption" << endl;
 	cin >> encryptionMethod;
+
 	switch (encryptionMethod)
 	{
 	case '1':
-		cout << "Hallo" << endl;
 		encryptor->encryptXOR(key, abc);
 		break;
 	case '2':
-
+		encryptor->encryptAES();
+		break;
+	case '3':
+		//encryptor->cesarEncryption();
 		break;
 	default:
-		cout << "Please enter a valid number!" + encryptionMethod << endl;
+		cout << "Please enter a valid number!"<< endl;
 		break;
 	}
 
@@ -71,8 +75,28 @@ void encrypt()
 
 void decrypt()
 {
+	char selection;
 	char path;
 	cout << "Enter path to the encrypted file: ";
 	cin >> path;
+	cout << "Please ....: " << endl;
+	cin >> selection;
+	cin.clear();
+	cin.ignore(INT_MAX, '\n');
+
+	switch (selection)
+	{
+	case '1':
+
+		break;
+	case '2':
+
+		break;
+	case '3':
+		break;
+	default:
+		break;
+	}
+
 
 }
