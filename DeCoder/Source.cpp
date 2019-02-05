@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Encryptor.h"
-#include "dll.h"
-
+//#include "Source.h"
 using namespace std;
 
 void encrypt();
@@ -41,8 +40,6 @@ void encrypt()
 	char encryptionMethod;
 	char abc[] = { 'a' };
 	char key[] = { 'f' };
-
-	
 
 	cout << "Enter path + filename to encrypt the file: ";
 	cin >> filename;
