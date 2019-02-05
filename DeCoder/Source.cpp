@@ -68,6 +68,8 @@ void encrypt()
 		break;
 	}
 
+
+
 }
 
 void decrypt()
