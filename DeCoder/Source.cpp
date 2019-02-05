@@ -2,6 +2,8 @@
 #include <string>
 #include "Encryptor.h"
 //#include "Source.h"
+#include "dll.h"
+
 using namespace std;
 
 void encrypt();
@@ -64,8 +66,6 @@ void encrypt()
 		cout << "Please enter a valid number!" + encryptionMethod << endl;
 		break;
 	}
-
-
 
 }
 
