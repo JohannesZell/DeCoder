@@ -21,7 +21,7 @@ void main() {
 	cout << "/_______  /\\___  >\\______  /\\____/\\____ |\\___  >__|   " << endl;
 	cout << "        \\/     \\/        \\/            \\/    \\/       " << endl;
 	cout << endl;
-	cout << "Select 1 to encrypt a file. Select 2 for decrypting" << endl;
+	cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
 	cin >> selection;
 	switch (selection)
 	{
@@ -39,13 +39,13 @@ void main() {
 
 void encrypt()
 {
-	char filename;
+	char path[100];
 	char encryptionMethod;
 	char abc[] = { 'a' };
 	char key[] = { 'f' };
 
 	cout << "Enter path + filename to encrypt the file: ";
-	cin >> filename;
+	cin >> path;
 	cin.clear(); 
 	cin.ignore(INT_MAX, '\n');
 
@@ -59,13 +59,13 @@ void encrypt()
 	{
 	case '1':
 		cout << "Hallo" << endl;
-		encryptor->encryptAES(abc);
+		encryptor->encryptXOR(path, path + 'e');
 		break;
 	case '2':
-		//encryptor->encryptAES();
+		encryptor->encryptAES(path, path);
 		break;
 	case '3':
-		//encryptor->cesarEncryption();
+		encryptor->encryptCesar(path, path + 'e');
 		break;
 	default:
 		cout << "Please enter a valid number!"<< endl;
@@ -77,7 +77,7 @@ void encrypt()
 void decrypt()
 {
 	char selection;
-	char path;
+	char path[100];
 	cout << "Enter path to the encrypted file: ";
 	cin >> path;
 	cout << "Please ....: " << endl;
@@ -94,6 +94,7 @@ void decrypt()
 
 		break;
 	case '3':
+		encryptor->decryptCesar(path, path + 'd');
 		break;
 	default:
 		break;
