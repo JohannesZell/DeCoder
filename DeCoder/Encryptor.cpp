@@ -67,14 +67,13 @@ void Encryptor::decryptXOR(char * sourcePath, char * output)
 
 
 
-char* Encryptor::encryptAES(char* sourcePath, char* output)
-{
-	
+char* Encryptor::encryptAES(char* sourcePath)
+{	
 	fstream fin(sourcePath, fstream::in);
+	fstream fout(sourcePath + 'e', fstream::out);
+	fstream keyOut(sourcePath, fstream::out);
+	cout << "S: " << sourcePath << " O: " << sourcePath << endl;
 	char* c = parse(fin);
-	fstream fout(output + 'e', fstream::out);
-	//fstream keyOut(output + 'key', fstream::out);
-
 	
 
 	AutoSeededRandomPool rnd;
@@ -82,7 +81,7 @@ char* Encryptor::encryptAES(char* sourcePath, char* output)
 	SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 	rnd.GenerateBlock(key, key.size());
 	cout << "Your random key:" << key << endl;
-	//keyOut << key;
+	keyOut << key;
 
 	// Generate a random IV
 	SecByteBlock iv(AES::BLOCKSIZE);
@@ -113,7 +112,7 @@ char* Encryptor::encryptAES(char* sourcePath, char* output)
 	return nullptr;
 }
 
-char * Encryptor::decryptAES(char* sourcePath, char* output)
+char * Encryptor::decryptAES(char* sourcePath)
 {
 	/*
 	fstream fin(sourcePath, fstream::in);

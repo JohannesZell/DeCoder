@@ -11,8 +11,8 @@ public:
 
 	char* encryptXOR(char key[], char* rawData);
 	void decryptXOR(char* sourcePath, char* output);
-	char* encryptAES(char* sourcePath, char* output);
-	char* decryptAES(char* sourcePath, char* output);
+	char* encryptAES(char* sourcePath);
+	char* decryptAES(char* sourcePath);
 	void encryptCesar(char* sourcePath, char* output);
 	void decryptCesar(char* sourcePath, char* output);
 
