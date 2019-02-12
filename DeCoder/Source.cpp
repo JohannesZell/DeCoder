@@ -62,10 +62,10 @@ void encrypt()
 		encryptor->encryptXOR(path, path);
 		break;
 	case '2':
-		encryptor->encryptAES(path, path);
+		encryptor->encryptAES(path);
 		break;
 	case '3':
-		encryptor->encryptCesar(path, path + 'e');
+		encryptor->encryptCesar(path, path);
 		break;
 	default:
 		cout << "Please enter a valid number!"<< endl;
