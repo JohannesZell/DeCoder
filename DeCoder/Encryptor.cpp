@@ -67,16 +67,16 @@ void Encryptor::decryptXOR(char * sourcePath, char * output)
 
 
 
-char* Encryptor::encryptAES(char* sourcePath)
+char* Encryptor::encryptAES(char* sourcePath, const char* output)
 {	
+	string input;
 	fstream fin(sourcePath, fstream::in);
-	fstream fout(sourcePath + 'e', fstream::out);
-	fstream keyOut(sourcePath, fstream::out);
-	cout << "S: " << sourcePath << " O: " << sourcePath << endl;
-	char* c = parse(fin);
-	
-
+	fstream fout(output, fstream::out);
+	fstream keyOut(output, fstream::out);
+	getline(fin, input);
+	vector<char> bytes(input.begin(), input.end());
 	AutoSeededRandomPool rnd;
+
 	// Generate a random key
 	SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 	rnd.GenerateBlock(key, key.size());
@@ -87,12 +87,12 @@ char* Encryptor::encryptAES(char* sourcePath)
 	SecByteBlock iv(AES::BLOCKSIZE);
 	rnd.GenerateBlock(iv, iv.size());
 
-	byte plainText[10];
-	for (size_t i = 0; i < sizeof(c); i++)
+	byte plainText[sizeof(bytes)];
+	for (size_t i = 0; i < sizeof(bytes) + 1; i++)
 	{
-		plainText[i] = (byte)c[i];
+		plainText[i] = bytes[i];
 	}
-	size_t messageLen = std::strlen((char*)plainText) + 1;
+	size_t messageLen = sizeof(bytes) + 1;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Encrypt
@@ -109,10 +109,11 @@ char* Encryptor::encryptAES(char* sourcePath)
 	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(), iv);
 	cfbDecryption.ProcessData(plainText, plainText, messageLen);
 	cout << plainText;
+	fout << plainText;
 	return nullptr;
 }
 
-char * Encryptor::decryptAES(char* sourcePath)
+char * Encryptor::decryptAES(char* sourcePath, const char* output)
 {
 	/*
 	fstream fin(sourcePath, fstream::in);
@@ -134,7 +135,6 @@ char inputData;
 
 //Array for PIN
 int cesarPinArray[5];
-
 //Counter for looping the array
 int cesarCounterArray;
 
@@ -162,7 +162,7 @@ void Encryptor::encryptCesar(char* sourcePath, char* output)
 	cout << endl;
 }
 
-void Encryptor::decryptCesar(char* sourcePath, char* output)
+void Encryptor::decryptCesar(char* sourcePath, char*	output)
 {
 	fstream fin(sourcePath, fstream::in);
 	fstream fout(output, fstream::out); 
