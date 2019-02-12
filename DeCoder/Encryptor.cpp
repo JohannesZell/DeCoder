@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string.h>
 #include "dll.h"
+#include <fstream>
 
 using namespace std;
 using namespace CryptoPP;
@@ -30,33 +31,59 @@ char* Encryptor::encryptXOR(char* sourcePath, char* output)
 {
 	char key[10];
 	fstream fin(sourcePath, fstream::in);
-	fstream fout(output + 'e', fstream::out);
-	char* rawData = parse(fin);
+	ofstream outfile;
+	//fstream fout(output, fstream::out);
+	//char* rawData = fin;			//parse(fin);
+	char rawData;
+	char encData;
+	int count = 0;
 
 	cout << "Please enter an Key up to 10 Digits" << endl;
+	cin >> key;
+	outfile.open("C:\\Users\\gross\\XORe.txt");
 
+	while (fin >> noskipws >> rawData) 
+	{
+		encData = int(rawData) ^ (int)key[count % sizeof(key)];
+		cout << encData;
+		outfile << encData;
+		count++;
+	}
+	outfile.close();
+	
+
+
+	/*
+	fin >> noskipws >> rawData;
+
+	cout << "Please enter an Key up to 10 Digits" << endl;
+	
+	cin >> key;
 	for (int i = 0; i < 10; i++) { //Intelligenter den Pin einlesen
 		cin >> key[i];
 	}
+	
 	cout << endl;
+	cout << key << endl << rawData << endl;
 
 	int keyLength = sizeof(key);
 	int remainingData = sizeof(fin);
 	char encData[1000];
-	int step = 0;
-	cout << remainingData;
+	int iteration = 0;
 	
 	while (remainingData > 0)
 	{
 		for (int count = 0; count < keyLength; count++)
 		{
-			encData[step + count] = (int)rawData[step + count] ^ (int)key[count];
+			encData[iteration + count] = (int)rawData[iteration + count] ^ (int)key[count];
 			remainingData = remainingData - 1;
 		}
-		step = step + keyLength;
+		iteration = iteration + keyLength;
 	}
 	cout << encData << endl;
-	
+	fout << encData;
+
+	*/
 	return __nullptr;
 }
 
@@ -67,33 +94,32 @@ void Encryptor::decryptXOR(char * sourcePath, char * output)
 
 
 
-char* Encryptor::encryptAES(char* sourcePath, char* output)
-{
-	
+char* Encryptor::encryptAES(char* sourcePath, const char* output)
+{	
+	string input;
 	fstream fin(sourcePath, fstream::in);
-	char* c = parse(fin);
-	fstream fout(output + 'e', fstream::out);
-	//fstream keyOut(output + 'key', fstream::out);
-
-	
-
+	fstream fout(output, fstream::out);
+	fstream keyOut(output, fstream::out);
+	getline(fin, input);
+	vector<char> bytes(input.begin(), input.end());
 	AutoSeededRandomPool rnd;
+
 	// Generate a random key
 	SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 	rnd.GenerateBlock(key, key.size());
 	cout << "Your random key:" << key << endl;
-	//keyOut << key;
+	keyOut << key;
 
 	// Generate a random IV
 	SecByteBlock iv(AES::BLOCKSIZE);
 	rnd.GenerateBlock(iv, iv.size());
 
-	byte plainText[10];
-	for (size_t i = 0; i < sizeof(c); i++)
+	byte plainText[sizeof(bytes)];
+	for (size_t i = 0; i < sizeof(bytes) + 1; i++)
 	{
-		plainText[i] = (byte)c[i];
+		plainText[i] = bytes[i];
 	}
-	size_t messageLen = std::strlen((char*)plainText) + 1;
+	size_t messageLen = sizeof(bytes) + 1;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Encrypt
@@ -110,10 +136,11 @@ char* Encryptor::encryptAES(char* sourcePath, char* output)
 	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(), iv);
 	cfbDecryption.ProcessData(plainText, plainText, messageLen);
 	cout << plainText;
+	fout << plainText;
 	return nullptr;
 }
 
-char * Encryptor::decryptAES(char* sourcePath, char* output)
+char * Encryptor::decryptAES(char* sourcePath, const char* output)
 {
 	/*
 	fstream fin(sourcePath, fstream::in);
@@ -134,7 +161,7 @@ char * Encryptor::decryptAES(char* sourcePath, char* output)
 char inputData;
 
 //Array for PIN
-int cesarPinArray[100];
+int cesarPinArray[5];
 
 //Counter for looping the array
 int cesarCounterArray;
@@ -176,7 +203,7 @@ void Encryptor::encryptCesar(char* sourcePath, char* output)
 	cout << endl;
 }
 
-void Encryptor::decryptCesar(char* sourcePath, char* output)
+void Encryptor::decryptCesar(char* sourcePath, char*	output)
 {
 	fstream fin(sourcePath, fstream::in);
 	fstream fout(output, fstream::out); 

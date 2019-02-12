@@ -40,6 +40,8 @@ void main() {
 void encrypt()
 {
 	char path[100];
+	const char *c;
+	string savePath = "";
 	char encryptionMethod;
 	char abc[] = { 'a' };
 	char key[] = { 'f' };
@@ -48,6 +50,13 @@ void encrypt()
 	cin >> path;
 	cin.clear(); 
 	cin.ignore(INT_MAX, '\n');
+
+	cout << "Enter path where the file should be saved: ";
+	cin >> savePath;
+	cin.clear();
+	cin.ignore(INT_MAX, '\n');
+	savePath += "encryptedFile.txt";
+	c = savePath.c_str();
 
 	cout << "Please choose an encryption method (1-3)" << endl;
 	cout << "1) XOR" << endl;
@@ -59,13 +68,13 @@ void encrypt()
 	{
 	case '1':
 		cout << "Hallo" << endl;
-		encryptor->encryptXOR(path, path + 'e');
+		encryptor->encryptXOR(path, path);
 		break;
 	case '2':
-		encryptor->encryptAES(path, path);
+		encryptor->encryptAES(path, c);
 		break;
 	case '3':
-		encryptor->encryptCesar(path, path + 'e');
+		encryptor->encryptCesar(path, path);
 		break;
 	default:
 		cout << "Please enter a valid number!"<< endl;
