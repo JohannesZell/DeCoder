@@ -131,7 +131,7 @@ char * Encryptor::decryptAES(char* sourcePath, char* output)
 
 
 // DEFINITION 
-char ch;
+char inputData;
 
 //Array for PIN
 int cesarPinArray[5];
@@ -152,8 +152,8 @@ void Encryptor::encryptCesar(char* sourcePath, char* output)
 	cout << endl;
 	
 	//Encrypt
-	while (fin >> noskipws >> ch) {
-		int ich = (int)ch;
+	while (fin >> noskipws >> inputData) {
+		int ich = (int)inputData;
 		ich = ich + cesarPinArray[cesarCounterArray];
 		cesarCounterArray = ((++cesarCounterArray) % 5);
 		char ch2 = (char)ich;
@@ -175,14 +175,14 @@ void Encryptor::decryptCesar(char* sourcePath, char* output)
 
 	cout << endl;
 
-	//Encrypt
-	while (fin >> noskipws >> ch) {
-		int ich = (int)ch;
-		ich = ich - cesarPinArray[cesarCounterArray];
+	//Decrypt
+	while (fin >> noskipws >> inputData) {
+		int intCastedData = (int)inputData;
+		intCastedData = intCastedData - cesarPinArray[cesarCounterArray];
 		cesarCounterArray = ((++cesarCounterArray) % 5);
-		char ch2 = (char)ich;
-		cout << ch2;
-		fout << ch2;
+		char outputData = (char)intCastedData;
+		cout << outputData;
+		fout << outputData;
 	}
 	cout << endl;
 }
