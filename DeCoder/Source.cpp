@@ -59,7 +59,7 @@ void encrypt()
 	{
 	case '1':
 		cout << "Hallo" << endl;
-		encryptor->encryptXOR(path, path + 'e');
+		encryptor->encryptXOR(path, path);
 		break;
 	case '2':
 		encryptor->encryptAES(path, path);

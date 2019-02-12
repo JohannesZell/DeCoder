@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string.h>
 #include "dll.h"
+#include <fstream>
 
 using namespace std;
 using namespace CryptoPP;
@@ -30,33 +31,59 @@ char* Encryptor::encryptXOR(char* sourcePath, char* output)
 {
 	char key[10];
 	fstream fin(sourcePath, fstream::in);
-	fstream fout(output + 'e', fstream::out);
-	char* rawData = parse(fin);
+	ofstream outfile;
+	//fstream fout(output, fstream::out);
+	//char* rawData = fin;			//parse(fin);
+	char rawData;
+	char encData;
+	int count = 0;
 
 	cout << "Please enter an Key up to 10 Digits" << endl;
+	cin >> key;
+	outfile.open("C:\\Users\\gross\\XORe.txt");
 
+	while (fin >> noskipws >> rawData) 
+	{
+		encData = int(rawData) ^ (int)key[count % sizeof(key)];
+		cout << encData;
+		outfile << encData;
+		count++;
+	}
+	outfile.close();
+	
+
+
+	/*
+	fin >> noskipws >> rawData;
+
+	cout << "Please enter an Key up to 10 Digits" << endl;
+	
+	cin >> key;
 	for (int i = 0; i < 10; i++) { //Intelligenter den Pin einlesen
 		cin >> key[i];
 	}
+	
 	cout << endl;
+	cout << key << endl << rawData << endl;
 
 	int keyLength = sizeof(key);
 	int remainingData = sizeof(fin);
 	char encData[1000];
-	int step = 0;
-	cout << remainingData;
+	int iteration = 0;
 	
 	while (remainingData > 0)
 	{
 		for (int count = 0; count < keyLength; count++)
 		{
-			encData[step + count] = (int)rawData[step + count] ^ (int)key[count];
+			encData[iteration + count] = (int)rawData[iteration + count] ^ (int)key[count];
 			remainingData = remainingData - 1;
 		}
-		step = step + keyLength;
+		iteration = iteration + keyLength;
 	}
 	cout << encData << endl;
-	
+	fout << encData;
+
+	*/
 	return __nullptr;
 }
 
