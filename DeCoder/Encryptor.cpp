@@ -93,13 +93,12 @@ void Encryptor::decryptXOR(char * sourcePath, char * output)
 
 
 
-
 char* Encryptor::encryptAES(char* sourcePath, const char* output)
 {	
 	string input;
 	fstream fin(sourcePath, fstream::in);
-	fstream fout(output, fstream::out);
-	fstream keyOut(output, fstream::out);
+	fstream fout;
+	fstream keyOut;
 	getline(fin, input);
 	vector<char> bytes(input.begin(), input.end());
 	AutoSeededRandomPool rnd;
@@ -108,45 +107,66 @@ char* Encryptor::encryptAES(char* sourcePath, const char* output)
 	SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 	rnd.GenerateBlock(key, key.size());
 	cout << "Your random key:" << key << endl;
+	keyOut.open("C:\\Users\\johan\\Desktop\\AESKey.txt",fstream::out | fstream::trunc);
 	keyOut << key;
+	keyOut.close();
 
 	// Generate a random IV
 	SecByteBlock iv(AES::BLOCKSIZE);
 	rnd.GenerateBlock(iv, iv.size());
 
-	byte plainText[sizeof(bytes)];
-	for (size_t i = 0; i < sizeof(bytes) + 1; i++)
+	byte* plainText = new byte[input.size()];
+
+	int length = input.size();
+	for (size_t i = 0; i < length; i++)
 	{
 		plainText[i] = bytes[i];
 	}
-	size_t messageLen = sizeof(bytes) + 1;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Encrypt
 
 	CFB_Mode<AES>::Encryption cfbEncryption(key, key.size(), iv);
-	cfbEncryption.ProcessData(plainText, plainText, messageLen);
+	cfbEncryption.ProcessData(plainText, plainText, length);
 
-	cout << plainText << endl;
-	
-
+	cout << "------------------------------ENCRYPTED------------------------------" << endl;
+	for (size_t i = 0; i < length; i++)
+	{
+		cout << plainText[i];
+	}
+	fout.open("C:\\Users\\johan\\Desktop\\EncryptedFile.txt", fstream::out | fstream::trunc | fstream::binary);
+	fout << plainText;
+	fout.close();
+	cout << endl;
 	//////////////////////////////////////////////////////////////////////////
 	// Decrypt
 
 	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(), iv);
-	cfbDecryption.ProcessData(plainText, plainText, messageLen);
-	cout << plainText;
-	fout << plainText;
+	cfbDecryption.ProcessData(plainText, plainText, length);
+	cout << "------------------------------DECRYPTED------------------------------" << endl;
+	for (size_t i = 0; i < length; i++)
+	{
+		cout << plainText[i];
+	}
+	cout << endl;
+	//fout << plainText;
+	delete[] plainText;
 	return nullptr;
 }
 
 char * Encryptor::decryptAES(char* sourcePath, const char* output)
 {
-	/*
+	/*char* keyFile;
+	cout << "Please enter the Key file: ";
+	cin >> keyFile;
 	fstream fin(sourcePath, fstream::in);
-	fstream fout(output, fstream::out);
+	fstream fout;
+	fstream key(keyFile, fstream::in);
+	string input;
+	getline(key, input);
 
-	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(), iv);
+
+	CFB_Mode<AES>::Decryption cfbDecryption(input, input.size, iv); 
 	cfbDecryption.ProcessData(plainText, plainText, messageLen);
 	cout << plainText;*/
 	return nullptr;
