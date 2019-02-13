@@ -182,18 +182,32 @@ char inputData;
 
 //Array for PIN
 int cesarPinArray[5];
+
 //Counter for looping the array
 int cesarCounterArray;
+
+//Char for PIN reading
+char pin;
+
+//Bool for correct PIN entry
+bool crEntry;
 
 void Encryptor::encryptCesar(char* sourcePath, char* output)
 {
 	fstream fin(sourcePath, fstream::in);
 	fstream fout(output, fstream::out); 
+
 	//Get PIN
-	cout << "Please enter your 5 digit PIN" << endl;
+	while (crEntry == false) {
+		cout << "Please enter your 5 digit PIN" << endl;
+		cin >> pin;
+		if (sizeof(pin)> 5) {
+			crEntry = true;
+		}
+	}
 
 	for (int i = 0; i < 5; i++)
-		cin >> cesarPinArray[i];
+		pin >> cesarPinArray[i];
 
 	cout << endl;
 	
