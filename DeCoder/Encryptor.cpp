@@ -7,7 +7,6 @@
 using namespace std;
 using namespace CryptoPP;
 
-
 Encryptor::Encryptor()
 {
 }
@@ -17,31 +16,22 @@ Encryptor::~Encryptor()
 {
 }
 
-char* parse(istream &input) {
-	char c[100];
-	while (input >> c)
-	{
-		cout << c << endl;
-	}
-	return c;
-}
 
 
-char* Encryptor::encryptXOR(char* sourcePath, char* output)
+char* Encryptor::encryptXOR(char* sourcePath, const char* output)
 {
 	char key[10];
 	fstream fin(sourcePath, fstream::in);
 	ofstream outfile;
-	//fstream fout(output, fstream::out);
-	//char* rawData = fin;			//parse(fin);
 	char rawData;
 	char encData;
 	int count = 0;
 
 	cout << "Please enter an Key up to 10 Digits" << endl;
 	cin >> key;
-	outfile.open("C:\\Users\\gross\\XORe.txt");
+	outfile.open(output);
 
+	cout << "------------------------------ENCRYPTED------------------------------" << endl;
 	while (fin >> noskipws >> rawData) 
 	{
 		encData = int(rawData) ^ (int)key[count % sizeof(key)];
@@ -49,73 +39,77 @@ char* Encryptor::encryptXOR(char* sourcePath, char* output)
 		outfile << encData;
 		count++;
 	}
-	outfile.close();
-	
-
-
-	/*
-	fin >> noskipws >> rawData;
-
-	cout << "Please enter an Key up to 10 Digits" << endl;
-	
-	cin >> key;
-	for (int i = 0; i < 10; i++) { //Intelligenter den Pin einlesen
-		cin >> key[i];
-	}
-	
 	cout << endl;
-	cout << key << endl << rawData << endl;
+	outfile.close();
 
-	int keyLength = sizeof(key);
-	int remainingData = sizeof(fin);
-	char encData[1000];
-	int iteration = 0;
-	
-	while (remainingData > 0)
-	{
-		for (int count = 0; count < keyLength; count++)
-		{
-			encData[iteration + count] = (int)rawData[iteration + count] ^ (int)key[count];
-			remainingData = remainingData - 1;
-		}
-		iteration = iteration + keyLength;
-	}
-	cout << encData << endl;
-	fout << encData;
-
-	*/
 	return __nullptr;
 }
 
-void Encryptor::decryptXOR(char * sourcePath, char * output)
+void Encryptor::decryptXOR(char * sourcePath, const char * output)
 {
+	char key[10];
+	fstream fin(sourcePath, fstream::in);
+	ofstream outfile;
+	char rawData;
+	char encData;
+	int count = 0;
+
+	cout << "Please enter an Key up to 10 Digits" << endl;
+	cin >> key;
+	outfile.open(output);
+
+	cout << "------------------------------DECRYPTED------------------------------" << endl;
+	while (fin >> noskipws >> rawData)
+	{
+		encData = int(rawData) ^ (int)key[count % sizeof(key)];
+		cout << encData;
+		outfile << encData;
+		count++;
+	}
+	cout << endl;
+	outfile.close();
 }
 
-
+SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
+SecByteBlock iv(AES::BLOCKSIZE);
 
 char* Encryptor::encryptAES(char* sourcePath, const char* output)
 {	
 	string input;
 	fstream fin(sourcePath, fstream::in);
-	fstream fout;
 	fstream keyOut;
+	fstream ivOut;
+	fstream fOut;
 	getline(fin, input);
 	vector<char> bytes(input.begin(), input.end());
 	AutoSeededRandomPool rnd;
 
 	// Generate a random key
-	SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 	rnd.GenerateBlock(key, key.size());
 	cout << "Your random key:" << key << endl;
-	keyOut.open("C:\\Users\\johan\\Desktop\\AESKey.txt",fstream::out | fstream::trunc);
-	keyOut << key;
-	keyOut.close();
 
 	// Generate a random IV
-	SecByteBlock iv(AES::BLOCKSIZE);
 	rnd.GenerateBlock(iv, iv.size());
+	FileSink* iv_out = new FileSink("C:\\Users\\johan\\Desktop\\IV.bin");
+	iv_out->Put(iv, iv.size());
+	iv_out->MessageEnd();
 
-	byte* plainText = new byte[input.size()];
+	FileSink* key_out = new FileSink("C:\\Users\\johan\\Desktop\\AESKey.bin");
+	key_out->Put(key, key.size());
+	key_out->MessageEnd();
+
+
+	/*keyOut.open("C:\\Users\\johan\\Desktop\\AESKey.bin",fstream::out | fstream::trunc | fstream::binary);
+	keyOut << key;
+	keyOut.close();
+	ivOut.open("C:\\Users\\johan\\Desktop\\IV.bin", fstream::out | fstream::trunc | fstream::binary);
+	ivOut << iv;
+	ivOut.close();
+	*/
+
+	
+	byte *plainText = new byte[input.size()];
+
 
 	int length = input.size();
 	for (size_t i = 0; i < length; i++)
@@ -128,20 +122,67 @@ char* Encryptor::encryptAES(char* sourcePath, const char* output)
 
 	CFB_Mode<AES>::Encryption cfbEncryption(key, key.size(), iv);
 	cfbEncryption.ProcessData(plainText, plainText, length);
-
 	cout << "------------------------------ENCRYPTED------------------------------" << endl;
 	for (size_t i = 0; i < length; i++)
 	{
 		cout << plainText[i];
 	}
-	fout.open("C:\\Users\\johan\\Desktop\\EncryptedFile.txt", fstream::out | fstream::trunc | fstream::binary);
-	fout << plainText;
-	fout.close();
-	cout << endl;
-	//////////////////////////////////////////////////////////////////////////
-	// Decrypt
 
-	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(), iv);
+	fOut.open(output, fstream::out | fstream::trunc | fstream::binary);
+	for (size_t i = 0; i < length; i++)
+	{
+		fOut << plainText[i];
+	}
+	fOut.close();
+	cout << endl;
+
+	delete[] plainText;
+	return nullptr;
+}
+
+char * Encryptor::decryptAES(char* sourcePath, const char* output)
+{
+	string input;
+	char keyFileDirectory[100];
+	char ivFileDirectory[100];
+
+	cout << "Please enter the Key file: ";
+	cin >> keyFileDirectory;
+	cout << "Please enter the IV file: ";
+	cin >> ivFileDirectory;
+
+	fstream fin(sourcePath, fstream::in | fstream::binary);
+	fstream fOut;
+	getline(fin, input);
+	vector<char> bytes(input.begin(), input.end());
+
+
+	//Save Key in Key variable
+	//SecByteBlock key(AES::MAX_KEYLENGTH);
+	//ArraySink* arr_key_in = new ArraySink(key, key.size());
+	//FileSource source(keyFileDirectory, false);
+	//source.PumpMessages();
+	//FileSource fs_key(keyFileDirectory, true, new ArraySink(key.begin(), key.size()));
+	//fs_key.PumpAll();
+	//cout << "Key: " << key;
+
+
+	//Save IV in iv variable
+	//SecByteBlock iv(AES::BLOCKSIZE);
+	//FileSource fs_iv(ivFileDirectory, true, new ArraySink(iv.begin(), iv.size()));
+	//fs_iv.PumpAll();
+
+//	cout << "Key: " << read_key << " IV: " << iv << endl;
+
+	byte* plainText = new byte[input.size()];
+
+	int length = input.size();
+	for (size_t i = 0; i < length; i++)
+	{
+		plainText[i] = bytes[i];
+	}
+
+	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(),iv);
 	cfbDecryption.ProcessData(plainText, plainText, length);
 	cout << "------------------------------DECRYPTED------------------------------" << endl;
 	for (size_t i = 0; i < length; i++)
@@ -149,33 +190,17 @@ char* Encryptor::encryptAES(char* sourcePath, const char* output)
 		cout << plainText[i];
 	}
 	cout << endl;
-	//fout << plainText;
+	fOut.open(output, fstream::out | fstream::trunc | fstream::binary);
+	for (size_t i = 0; i < length; i++)
+	{
+		fOut << plainText[i];
+	}
+	
+	fOut.close();
 	delete[] plainText;
+
 	return nullptr;
 }
-
-char * Encryptor::decryptAES(char* sourcePath, const char* output)
-{
-	/*char* keyFile;
-	cout << "Please enter the Key file: ";
-	cin >> keyFile;
-	fstream fin(sourcePath, fstream::in);
-	fstream fout;
-	fstream key(keyFile, fstream::in);
-	string input;
-	getline(key, input);
-
-
-	CFB_Mode<AES>::Decryption cfbDecryption(input, input.size, iv); 
-	cfbDecryption.ProcessData(plainText, plainText, messageLen);
-	cout << plainText;*/
-	return nullptr;
-}
-
-////////////////////////////
-// CAESAR PIN
-////////////////////////////
-
 
 // DEFINITION 
 char inputData;
@@ -192,7 +217,7 @@ char pin;
 //Bool for correct PIN entry
 bool crEntry;
 
-void Encryptor::encryptCesar(char* sourcePath, char* output)
+void Encryptor::encryptCesar(char* sourcePath, const char* output)
 {
 	fstream fin(sourcePath, fstream::in);
 	fstream fout(output, fstream::out); 
@@ -210,7 +235,8 @@ void Encryptor::encryptCesar(char* sourcePath, char* output)
 		pin >> cesarPinArray[i];
 
 	cout << endl;
-	
+	cout << "------------------------------ENCRYPTED------------------------------" << endl;
+
 	//Encrypt
 	while (fin >> noskipws >> inputData) {
 		int ich = (int)inputData;
@@ -223,18 +249,19 @@ void Encryptor::encryptCesar(char* sourcePath, char* output)
 	cout << endl;
 }
 
-void Encryptor::decryptCesar(char* sourcePath, char*	output)
+void Encryptor::decryptCesar(char* sourcePath, const char* output)
 {
 	fstream fin(sourcePath, fstream::in);
 	fstream fout(output, fstream::out); 
 	//Get PIN
-	cout << "Please enter your 5 digit PIN" << endl;
+	cout << "Please enter your 5 digit PIN choosen for this file" << endl;
 
 	for (int i = 0; i < 5; i++)
 		cin >> cesarPinArray[i];
 
 	cout << endl;
 
+	cout << "------------------------------DECRYPTED------------------------------" << endl;
 	//Decrypt
 	while (fin >> noskipws >> inputData) {
 		int intCastedData = (int)inputData;

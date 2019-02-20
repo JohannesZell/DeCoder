@@ -11,36 +11,54 @@ void decrypt();
 
 Encryptor* encryptor = new Encryptor();
 
-void main() {
-	char selection;
-
-	cout << "________         _________            .___            " << endl;
-	cout << "\\______ \\   ____ \\_   ___ \\  ____   __| _/___________ " << endl;
-	cout << " |    |  \\_/ __ \\/    \\  \\/ /  _ \\ / __ |/ __ \\_  __ \\" << endl;
-	cout << " |    `   \\  ___/\\     \\___(  <_> ) /_/ \\  ___/|  | \\/" << endl;
-	cout << "/_______  /\\___  >\\______  /\\____/\\____ |\\___  >__|   " << endl;
-	cout << "        \\/     \\/        \\/            \\/    \\/       " << endl;
-	cout << endl;
-	cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
-	cin >> selection;
-	switch (selection)
+int main() {
+	
+	bool doAgain = false;
+	do
 	{
-	case '1':
-		encrypt();
-		break;
-	case '2':
-		decrypt();
-	default:
-		break;
-	}
-	system("pause");
+		cout << "________         _________            .___            " << endl;
+		cout << "\\______ \\   ____ \\_   ___ \\  ____   __| _/___________ " << endl;
+		cout << " |    |  \\_/ __ \\/    \\  \\/ /  _ \\ / __ |/ __ \\_  __ \\" << endl;
+		cout << " |    `   \\  ___/\\     \\___(  <_> ) /_/ \\  ___/|  | \\/" << endl;
+		cout << "/_______  /\\___  >\\______  /\\____/\\____ |\\___  >__|   " << endl;
+		cout << "        \\/     \\/        \\/            \\/    \\/       " << endl;
+		cout << endl;
+		char input;
+		char selection;
+		cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
+		cin >> selection;
+		switch (selection)
+		{
+		case '1':
+			encrypt();
+			break;
+		case '2':
+			decrypt();
+		default:
+			cout << "Wrong input!" << endl;
+			break;
+		}
+
+		cout << "Do you want to encrypt or decrypt another file? (y/n)" << endl;
+		cin >> input;
+		if (input == 'y')
+		{
+			doAgain = true;
+			cout << endl << string(55, '*') << endl;
+		}
+		else
+		{
+			doAgain = false;
+		}
+	} while (doAgain == true);
+	return 0;
 }
 
 
 void encrypt()
 {
 	char path[100];
-	const char *c;
+	const char *savePathChar;
 	string savePath = "";
 	char encryptionMethod;
 	char abc[] = { 'a' };
@@ -56,7 +74,7 @@ void encrypt()
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
 	savePath += "encryptedFile.txt";
-	c = savePath.c_str();
+	savePathChar = savePath.c_str();
 
 	cout << "Please choose an encryption method (1-3)" << endl;
 	cout << "1) XOR" << endl;
@@ -67,14 +85,13 @@ void encrypt()
 	switch (encryptionMethod)
 	{
 	case '1':
-		cout << "Hallo" << endl;
-		encryptor->encryptXOR(path, path);
+		encryptor->encryptXOR(path, savePathChar);
 		break;
 	case '2':
-		encryptor->encryptAES(path, c);
+		encryptor->encryptAES(path, savePathChar);
 		break;
 	case '3':
-		encryptor->encryptCesar(path, path);
+		encryptor->encryptCesar(path, savePathChar);
 		break;
 	default:
 		cout << "Please enter a valid number!"<< endl;
@@ -87,9 +104,23 @@ void decrypt()
 {
 	char selection;
 	char path[100];
+	const char* savePathChar;
+	string savePath = "";
+
 	cout << "Enter path to the encrypted file: ";
 	cin >> path;
-	cout << "Please ....: " << endl;
+
+	cout << "Enter path where the file should be saved: ";
+	cin >> savePath;
+	cin.clear();
+	cin.ignore(INT_MAX, '\n');
+	savePath += "DecryptedFile.txt";
+	savePathChar = savePath.c_str();
+
+	cout << "Please select chosen encryption method: " << endl;
+	cout << "1) XOR" << endl;
+	cout << "2) AES encryption" << endl;
+	cout << "3) Cesar encryption" << endl;
 	cin >> selection;
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
@@ -97,17 +128,15 @@ void decrypt()
 	switch (selection)
 	{
 	case '1':
-
+		encryptor->decryptXOR(path,savePathChar);
 		break;
 	case '2':
-
+		encryptor->decryptAES(path, savePathChar);
 		break;
 	case '3':
-		encryptor->decryptCesar(path, path + 'd');
+		encryptor->decryptCesar(path, savePathChar);
 		break;
 	default:
 		break;
 	}
-
-
 }

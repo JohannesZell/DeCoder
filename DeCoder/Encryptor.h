@@ -9,12 +9,12 @@ public:
 	Encryptor();
 	~Encryptor();
 
-	char* encryptXOR(char key[], char* rawData);
-	void decryptXOR(char* sourcePath, char* output);
+	char* encryptXOR(char* sourcePath, const char* outputs);
+	void decryptXOR(char* sourcePath, const char* output);
 	char* encryptAES(char* sourcePath, const char* output);
 	char* decryptAES(char* sourcePath, const char* output);
-	void encryptCesar(char* sourcePath, char* output);
-	void decryptCesar(char* sourcePath, char* output);
+	void encryptCesar(char* sourcePath, const char* output);
+	void decryptCesar(char* sourcePath, const char* output);
 
 };
 
