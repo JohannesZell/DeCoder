@@ -25,31 +25,40 @@ int main() {
 		cout << endl;
 		char input;
 		char selection;
-		cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
-		cin >> selection;
-		switch (selection)
-		{
-		case '1':
-			encrypt();
-			break;
-		case '2':
-			decrypt();
-		default:
-			cout << "Wrong input!" << endl;
-			break;
-		}
+		do {
 
-		cout << "Do you want to encrypt or decrypt another file? (y/n)" << endl;
-		cin >> input;
-		if (input == 'y')
-		{
-			doAgain = true;
-			cout << endl << string(55, '*') << endl;
-		}
-		else
-		{
-			doAgain = false;
-		}
+			cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
+			cin >> selection;
+			switch (selection)
+			{
+			case '1':
+				encrypt();
+				break;
+			case '2':
+				decrypt();
+			default:
+				cout << "Wrong input!" << endl;
+				break;
+			}
+		} while (selection != '1' && selection != '2');
+
+		do {
+
+			cout << "Do you want to encrypt or decrypt another file? (y/n)" << endl;
+			cin >> input;
+			if (input == 'y')
+			{
+				doAgain = true;
+				cout << endl << string(55, '*') << endl;
+			}
+			else if (input == 'n')
+			{
+				doAgain = false;
+			}
+			else {
+				cout << "Wrong input!" << endl;
+			}
+		} while (input != 'y' && input != 'n');
 	} while (doAgain == true);
 	return 0;
 }
@@ -69,35 +78,37 @@ void encrypt()
 	cin.clear(); 
 	cin.ignore(INT_MAX, '\n');
 
-	cout << "Enter path where the file should be saved: ";
+	cout << "Enter path where the file should be saved (ending with \\): ";
 	cin >> savePath;
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
 	savePath += "encryptedFile.txt";
 	savePathChar = savePath.c_str();
 
-	cout << "Please choose an encryption method (1-3)" << endl;
-	cout << "1) XOR" << endl;
-	cout << "2) AES encryption" << endl;
-	cout << "3) Cesar encryption" << endl;
-	cin >> encryptionMethod;
+	do {
+		cout << "Please choose an encryption method (1-3)" << endl;
+		cout << "1) XOR" << endl;
+		cout << "2) AES encryption" << endl;
+		cout << "3) Cesar encryption" << endl;
+		cin >> encryptionMethod;
 
-	switch (encryptionMethod)
-	{
-	case '1':
-		encryptor->encryptXOR(path, savePathChar);
-		break;
-	case '2':
-		encryptor->encryptAES(path, savePathChar);
-		break;
-	case '3':
-		encryptor->encryptCesar(path, savePathChar);
-		break;
-	default:
-		cout << "Please enter a valid number!"<< endl;
-		break;
-	}
-
+		switch (encryptionMethod)
+		{
+		case '1':
+			encryptor->encryptXOR(path, savePathChar);
+			break;
+		case '2':
+			encryptor->encryptAES(path, savePathChar);
+			break;
+		case '3':
+			encryptor->encryptCesar(path, savePathChar);
+			break;
+		default:
+			cout << "Please enter a valid number!" << endl;
+			encryptionMethod = '%';
+			break;
+		}
+	} while (encryptionMethod == '%');
 }
 
 void decrypt()
