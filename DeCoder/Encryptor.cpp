@@ -22,25 +22,30 @@ char* Encryptor::encryptXOR(char* sourcePath, const char* output)
 {
 	char key[10];
 	fstream fin(sourcePath, fstream::in);
-	ofstream outfile;
+	fstream fout;
 	char rawData;
 	char encData;
 	int count = 0;
 
 	cout << "Please enter an Key up to 10 Digits" << endl;
 	cin >> key;
-	outfile.open(output);
+	fout.open(output, ios::out);
+
+
+
 
 	cout << "------------------------------ENCRYPTED------------------------------" << endl;
-	while (fin >> noskipws >> rawData) 
+//	while (fin >> noskipws >> rawData) 
+		while (fin.get(rawData))
 	{
 		encData = int(rawData) ^ (int)key[count % sizeof(key)];
-		cout << encData;
-		outfile << encData;
+		cout << rawData;
+		fout << (char)encData;
 		count++;
 	}
 	cout << endl;
-	outfile.close();
+	fout.close();
+	fin.close();
 
 	return __nullptr;
 }
