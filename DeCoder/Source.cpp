@@ -26,7 +26,6 @@ int main() {
 		char input;
 		char selection;
 		do {
-
 			cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
 			cin >> selection;
 			switch (selection)

@@ -38,7 +38,7 @@ char* Encryptor::encryptXOR(char* sourcePath, const char* output)
 //	while (fin >> noskipws >> rawData) 
 		while (fin.get(rawData))
 	{
-		encData = int(rawData) ^ (int)key[count % sizeof(key)];
+		encData = int(rawData) ^ ( (int)key[count % sizeof(key)] +96);
 		cout << rawData;
 		fout << (char)encData;
 		count++;
