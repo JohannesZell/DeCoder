@@ -50,30 +50,6 @@ char* Encryptor::encryptXOR(char* sourcePath, const char* output)
 	return __nullptr;
 }
 
-void Encryptor::decryptXOR(char * sourcePath, const char * output)
-{
-	char key[10];
-	fstream fin(sourcePath, fstream::in);
-	ofstream outfile;
-	char rawData;
-	char encData;
-	int count = 0;
-
-	cout << "Please enter an Key up to 10 Digits" << endl;
-	cin >> key;
-	outfile.open(output);
-
-	cout << "------------------------------DECRYPTED------------------------------" << endl;
-	while (fin >> noskipws >> rawData)
-	{
-		encData = int(rawData) ^ (int)key[count % sizeof(key)];
-		cout << encData;
-		outfile << encData;
-		count++;
-	}
-	cout << endl;
-	outfile.close();
-}
 
 SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 SecByteBlock iv(AES::BLOCKSIZE);

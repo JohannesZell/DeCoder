@@ -128,7 +128,7 @@ void decrypt()
 	switch (selection)
 	{
 	case '1':
-		encryptor->decryptXOR(path,savePathChar);
+		encryptor->encryptXOR(path,savePathChar);
 		break;
 	case '2':
 		encryptor->decryptAES(path, savePathChar);
