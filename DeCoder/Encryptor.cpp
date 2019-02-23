@@ -18,7 +18,7 @@ Encryptor::~Encryptor()
 
 
 
-char* Encryptor::encryptXOR(char* sourcePath, const char* output)
+void Encryptor::encryptXOR(char* sourcePath, const char* output)
 {
 	char key[10];
 	fstream fin(sourcePath, fstream::in);
@@ -30,9 +30,6 @@ char* Encryptor::encryptXOR(char* sourcePath, const char* output)
 	cout << "Please enter an Key up to 10 Digits" << endl;
 	cin >> key;
 	fout.open(output, ios::out);
-
-
-
 
 	cout << "------------------------------ENCRYPTED------------------------------" << endl;
 //	while (fin >> noskipws >> rawData) 
@@ -46,15 +43,13 @@ char* Encryptor::encryptXOR(char* sourcePath, const char* output)
 	cout << endl;
 	fout.close();
 	fin.close();
-
-	return __nullptr;
 }
 
 
 SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
 SecByteBlock iv(AES::BLOCKSIZE);
 
-char* Encryptor::encryptAES(char* sourcePath, const char* output)
+void Encryptor::encryptAES(char* sourcePath, const char* output)
 {	
 	string input;
 	fstream fin(sourcePath, fstream::in);
@@ -118,10 +113,9 @@ char* Encryptor::encryptAES(char* sourcePath, const char* output)
 	cout << endl;
 
 	delete[] plainText;
-	return nullptr;
 }
 
-char * Encryptor::decryptAES(char* sourcePath, const char* output)
+void Encryptor::decryptAES(char* sourcePath, const char* output)
 {
 	string input;
 	char keyFileDirectory[100];
@@ -179,8 +173,6 @@ char * Encryptor::decryptAES(char* sourcePath, const char* output)
 	
 	fOut.close();
 	delete[] plainText;
-
-	return nullptr;
 }
 
 // DEFINITION 
