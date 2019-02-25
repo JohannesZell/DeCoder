@@ -48,8 +48,8 @@ void Encryptor::encryptXOR(char* sourcePath, const char* output)
 }
 
 
-SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH);
-SecByteBlock iv(AES::BLOCKSIZE);
+SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH); //Variable für den AES-Key
+SecByteBlock iv(AES::BLOCKSIZE); //Variable für den Initialisierungs Vektor
 
 void Encryptor::encryptAES(char* sourcePath, const char* output)
 {	
@@ -59,62 +59,53 @@ void Encryptor::encryptAES(char* sourcePath, const char* output)
 	fstream ivOut;
 	fstream fOut;
 	getline(fin, input);
-	vector<char> bytes(input.begin(), input.end());
-	AutoSeededRandomPool rnd;
+	vector<char> bytes(input.begin(), input.end()); //Byte Vector um Dateiinhalt abzuspeichern
+	AutoSeededRandomPool rnd; 
 
 	// Generate a random key
-	rnd.GenerateBlock(key, key.size());
+	rnd.GenerateBlock(key, key.size()); //Einen zufaelligen AES-Key generieren
 	cout << "Your random key:" << key << endl;
 
 	// Generate a random IV
-	rnd.GenerateBlock(iv, iv.size());
-	FileSink* iv_out = new FileSink("C:\\Users\\johan\\Desktop\\IV.bin");
-	iv_out->Put(iv, iv.size());
-	iv_out->MessageEnd();
+	rnd.GenerateBlock(iv, iv.size()); //Einen zufaelligen Initialisierungs Vektor generieren
+	FileSink* iv_out = new FileSink("C:\\Users\\johan\\Desktop\\IV.bin"); //FileSink aus der Crypto++ Lib um IV abzuspeichern
+	iv_out->Put(iv, iv.size()); //IV Bytweise abspeichern
+	iv_out->MessageEnd(); //FileSink "schließen"
 
-	FileSink* key_out = new FileSink("C:\\Users\\johan\\Desktop\\AESKey.bin");
-	key_out->Put(key, key.size());
-	key_out->MessageEnd();
-
-
-	/*keyOut.open("C:\\Users\\johan\\Desktop\\AESKey.bin",fstream::out | fstream::trunc | fstream::binary);
-	keyOut << key;
-	keyOut.close();
-	ivOut.open("C:\\Users\\johan\\Desktop\\IV.bin", fstream::out | fstream::trunc | fstream::binary);
-	ivOut << iv;
-	ivOut.close();
-	*/
-
+	FileSink* key_out = new FileSink("C:\\Users\\johan\\Desktop\\AESKey.bin");  //FileSink aus der Crypto++ Lib um Key abzuspeichern
+	key_out->Put(key, key.size());  //Key Bytweise abspeichern
+	key_out->MessageEnd();  //FileSink "schließen"
 	
-	byte *plainText = new byte[input.size()];
 
-
-	int length = input.size();
+	byte *plainText = new byte[input.size()];  //byte Array fuer den Dateiinput
+	int length = input.size(); 
 	for (size_t i = 0; i < length; i++)
 	{
-		plainText[i] = bytes[i];
+		plainText[i] = bytes[i]; //Dateien aus dem Vektor in das Byte Array schreiben
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	// Encrypt
 
-	CFB_Mode<AES>::Encryption cfbEncryption(key, key.size(), iv);
-	cfbEncryption.ProcessData(plainText, plainText, length);
+	CFB_Mode<AES>::Encryption cfbEncryption(key, key.size(), iv); //Erzeugen einer neuen cfbEncryption Klasse
+	cfbEncryption.ProcessData(plainText, plainText, length); //Dateiinhalt verschluesseln
+
+
 	cout << "------------------------------ENCRYPTED------------------------------" << endl;
 	for (size_t i = 0; i < length; i++)
 	{
-		cout << plainText[i];
+		cout << plainText[i]; //Ausgabe des verschluesselten Inhalts
 	}
 
 	fOut.open(output, fstream::out | fstream::trunc | fstream::binary);
 	for (size_t i = 0; i < length; i++)
 	{
-		fOut << plainText[i];
+		fOut << plainText[i]; //Speichern des verschluesselten Inhalts in der Datei
 	}
 	fOut.close();
 	cout << endl;
 
-	delete[] plainText;
+	delete[] plainText;  //Loeschen des plainText Arrays um Speicher wieder freizugeben
 }
 
 void Encryptor::decryptAES(char* sourcePath, const char* output)
@@ -131,27 +122,19 @@ void Encryptor::decryptAES(char* sourcePath, const char* output)
 	fstream fin(sourcePath, fstream::in | fstream::binary);
 	fstream fOut;
 	getline(fin, input);
-	vector<char> bytes(input.begin(), input.end());
+	vector<char> bytes(input.begin(), input.end());  //Byte Vector um Dateiinhalt abzuspeichern
 
 
-	//Save Key in Key variable
-	//SecByteBlock key(AES::MAX_KEYLENGTH);
-	//ArraySink* arr_key_in = new ArraySink(key, key.size());
-	//FileSource source(keyFileDirectory, false);
-	//source.PumpMessages();
-	//FileSource fs_key(keyFileDirectory, true, new ArraySink(key.begin(), key.size()));
-	//fs_key.PumpAll();
-	//cout << "Key: " << key;
+	if (empty(key) & empty(iv))
+	{
+		FileSource fs_key(keyFileDirectory, true, new ArraySink(key.begin(), key.size())); //Key aus File auslesen und in Variable abspeichern
+		fs_key.PumpAll();
 
+		FileSource fs_iv(ivFileDirectory, true, new ArraySink(iv.begin(), iv.size()));  //IV aus File auslesen und in Variable abspeichern
+		fs_iv.PumpAll();
+	}
 
-	//Save IV in iv variable
-	//SecByteBlock iv(AES::BLOCKSIZE);
-	//FileSource fs_iv(ivFileDirectory, true, new ArraySink(iv.begin(), iv.size()));
-	//fs_iv.PumpAll();
-
-//	cout << "Key: " << read_key << " IV: " << iv << endl;
-
-	byte* plainText = new byte[input.size()];
+	byte* plainText = new byte[input.size()];	//byte Array fuer den Dateiinput
 
 	int length = input.size();
 	for (size_t i = 0; i < length; i++)
@@ -159,22 +142,23 @@ void Encryptor::decryptAES(char* sourcePath, const char* output)
 		plainText[i] = bytes[i];
 	}
 
-	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(),iv);
-	cfbDecryption.ProcessData(plainText, plainText, length);
+	CFB_Mode<AES>::Decryption cfbDecryption(key, key.size(),iv);  //Erzeugen einer neuen cfbEncryption Klasse
+	cfbDecryption.ProcessData(plainText, plainText, length);  //Dateiinhalt entschluesseln
+
 	cout << "------------------------------DECRYPTED------------------------------" << endl;
 	for (size_t i = 0; i < length; i++)
 	{
-		cout << plainText[i];
+		cout << plainText[i];  //Ausgabe des entschluesselten Inhalts
 	}
 	cout << endl;
 	fOut.open(output, fstream::out | fstream::trunc | fstream::binary);
 	for (size_t i = 0; i < length; i++)
 	{
-		fOut << plainText[i];
+		fOut << plainText[i];  //Abspeichern des entschluesselten Inhalts
 	}
 	
 	fOut.close();
-	delete[] plainText;
+	delete[] plainText;  //Loeschen des plainText Arrays um Speicher wieder freizugeben
 }
 
 // DEFINITION 

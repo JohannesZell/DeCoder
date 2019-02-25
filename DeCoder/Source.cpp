@@ -31,10 +31,10 @@ int main() {
 			switch (selection)
 			{
 			case '1':
-				encrypt();
+				encrypt();  //Methode zum verschluesseln aufrufen
 				break;
 			case '2':
-				decrypt();
+				decrypt();  //Methode zum entschluesseln aufrufen
 			default:
 				cout << "Wrong input!" << endl;
 				break;
@@ -65,24 +65,22 @@ int main() {
 
 void encrypt()
 {
-	char path[100];
-	const char *savePathChar;
-	string savePath = "";
-	char encryptionMethod;
-	char abc[] = { 'a' };
-	char key[] = { 'f' };
+	char path[100];  //Variable fuer Dateipfad
+	const char *savePathChar;  //Pointer fuer den Speicherpfad
+	string savePath = "";  //String Variable zum zwischenspeichern des Speicherpfads
+	char encryptionMethod;  //Variable fuer Verschluesselungsauswahl
 
 	cout << "Enter path + filename to encrypt the file: ";
 	cin >> path;
-	cin.clear(); 
+	cin.clear(); //Keine weiteren Zeichen einlesen
 	cin.ignore(INT_MAX, '\n');
 
 	cout << "Enter path where the file should be saved (ending with \\): ";
 	cin >> savePath;
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
-	savePath += "encryptedFile.txt";
-	savePathChar = savePath.c_str();
+	savePath += "encryptedFile.txt";  //encryptedFile.txt als Dateiendung anhaengen
+	savePathChar = savePath.c_str();  
 
 	do {
 		cout << "Please choose an encryption method (1-3)" << endl;
@@ -94,13 +92,13 @@ void encrypt()
 		switch (encryptionMethod)
 		{
 		case '1':
-			encryptor->encryptXOR(path, savePathChar);
+			encryptor->encryptXOR(path, savePathChar);  //XOR verschluesselung
 			break;
 		case '2':
-			encryptor->encryptAES(path, savePathChar);
+			encryptor->encryptAES(path, savePathChar);  //AES verschluesselung
 			break;
 		case '3':
-			encryptor->encryptCesar(path, savePathChar);
+			encryptor->encryptCesar(path, savePathChar);  //Cesar verschluesselung
 			break;
 		default:
 			cout << "Please enter a valid number!" << endl;
@@ -112,9 +110,9 @@ void encrypt()
 
 void decrypt()
 {
-	char selection;
+	char selection;  
 	char path[100];
-	const char* savePathChar;
+	const char* savePathChar;  //Pointer fuer den Speicherpfad
 	string savePath = "";
 
 	cout << "Enter path to the encrypted file: ";
@@ -124,7 +122,7 @@ void decrypt()
 	cin >> savePath;
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
-	savePath += "DecryptedFile.txt";
+	savePath += "DecryptedFile.txt";  //DecryptedFile.txt als Dateiendung anhaengen
 	savePathChar = savePath.c_str();
 
 	cout << "Please select chosen encryption method: " << endl;
@@ -138,13 +136,13 @@ void decrypt()
 	switch (selection)
 	{
 	case '1':
-		encryptor->encryptXOR(path,savePathChar);
+		encryptor->encryptXOR(path,savePathChar);  //XOR entschluesseln
 		break;
 	case '2':
-		encryptor->decryptAES(path, savePathChar);
+		encryptor->decryptAES(path, savePathChar);  //AES entschluesseln
 		break;
 	case '3':
-		encryptor->decryptCesar(path, savePathChar);
+		encryptor->decryptCesar(path, savePathChar);  //Cesar entschluesseln
 		break;
 	default:
 		break;
