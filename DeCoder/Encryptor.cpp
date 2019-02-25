@@ -17,32 +17,34 @@ Encryptor::~Encryptor()
 }
 
 
-
+//***** Methode für XOR Verschlüsselung *****//
 void Encryptor::encryptXOR(char* sourcePath, const char* output)
 {
-	char key[10];
+// Initialisierung der lokalen Variablen
 	fstream fin(sourcePath, fstream::in);
 	fstream fout;
-	char rawData;
-	char encData;
-	int count = 0;
+	char key[10];			// Array für verwendetes Passwort
+	char rawData;			// Character-Variable für das originale Zeichen
+	char encData;			// Character-Variable für das verschlüsselte Zeichen
+	int count = 0;			// Zählvariable
 
 	cout << "Please enter an Key up to 10 Digits" << endl;
-	cin >> key;
-	fout.open(output, ios::out);
+	cin >> key;				// Einlesen des Passworts
+
+	fout.open(output, ios::out);	// Öffnen der Ausgabedatei
 
 	cout << "------------------------------ENCRYPTED------------------------------" << endl;
-//	while (fin >> noskipws >> rawData) 
-		while (fin.get(rawData))
+
+		while (fin.get(rawData))	// Einlesen eines Zeichens
 	{
-		encData = int(rawData) ^ ( (int)key[count % sizeof(key)] +96);
-		cout << rawData;
-		fout << (char)encData;
+		encData = int(rawData) ^ ( (int)key[count % sizeof(key)] +96);	// XOR Verknüpfung
+		cout << rawData;			
+		fout << (char)encData;		// Schreibvorgang des verschlüsselten Zeichens
 		count++;
 	}
 	cout << endl;
-	fout.close();
-	fin.close();
+	fout.close();			// Schließen der Ausgabedatei
+	fin.close();			// Schließen der Originaldatei
 }
 
 
