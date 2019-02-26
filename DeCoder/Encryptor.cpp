@@ -54,6 +54,8 @@ SecByteBlock iv(AES::BLOCKSIZE); //Variable für den Initialisierungs Vektor
 void Encryptor::encryptAES(char* sourcePath, const char* output)
 {	
 	string input;
+	string savePath = "";
+	const char* savePathChar;
 	fstream fin(sourcePath, fstream::in);
 	fstream keyOut;
 	fstream ivOut;
@@ -68,11 +70,18 @@ void Encryptor::encryptAES(char* sourcePath, const char* output)
 
 	// Generate a random IV
 	rnd.GenerateBlock(iv, iv.size()); //Einen zufaelligen Initialisierungs Vektor generieren
-	FileSink* iv_out = new FileSink("C:\\Users\\johan\\Desktop\\IV.bin"); //FileSink aus der Crypto++ Lib um IV abzuspeichern
+	savePath = output;
+	savePath += "IV.bin";  //IV.bin als Dateiendung hinzufuegen
+	savePathChar = savePath.c_str();
+	FileSink* iv_out = new FileSink(savePathChar); //FileSink aus der Crypto++ Lib um IV abzuspeichern
 	iv_out->Put(iv, iv.size()); //IV Bytweise abspeichern
 	iv_out->MessageEnd(); //FileSink "schließen"
 
-	FileSink* key_out = new FileSink("C:\\Users\\johan\\Desktop\\AESKey.bin");  //FileSink aus der Crypto++ Lib um Key abzuspeichern
+
+	savePath = output;
+	savePath += "AESKey.bin";  //AESKey.bin als Dateiendung hinzufuegen
+	savePathChar = savePath.c_str();
+	FileSink* key_out = new FileSink(savePathChar);  //FileSink aus der Crypto++ Lib um Key abzuspeichern
 	key_out->Put(key, key.size());  //Key Bytweise abspeichern
 	key_out->MessageEnd();  //FileSink "schließen"
 	
