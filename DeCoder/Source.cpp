@@ -24,7 +24,7 @@ int main() {
 		cout << endl;
 		char input;
 		char selection;
-		do {
+		do {				//Schleife für korrekte Eingabe
 			cout << "Select 1 to encrypt a file. Select 2 for decrypting: ";
 			cin >> selection;
 			switch (selection)
@@ -38,10 +38,9 @@ int main() {
 				cout << "Wrong input!" << endl;
 				break;
 			}
-		} while (selection != '1' && selection != '2');
+		} while (selection != '1' && selection != '2');	//Schleifenende
 
-		do {
-
+		do {				//Schleife für korrekte Eingabe
 			cout << "Do you want to encrypt or decrypt another file? (y/n)" << endl;
 			cin >> input;
 			if (input == 'y')
@@ -57,7 +56,7 @@ int main() {
 				cout << "Wrong input!" << endl;
 			}
 		} while (input != 'y' && input != 'n');
-	} while (doAgain == true);
+	} while (doAgain == true);	//Schleifenende
 	return 0;
 }
 
@@ -81,7 +80,7 @@ void encrypt()
 	savePath += "encryptedFile.txt";  //encryptedFile.txt als Dateiendung anhaengen
 	savePathChar = savePath.c_str();  
 
-	do {
+	do {				//Schleife für korrekte Eingabe
 		cout << "Please choose an encryption method (1-3)" << endl;
 		cout << "1) XOR" << endl;
 		cout << "2) AES encryption" << endl;
@@ -104,7 +103,7 @@ void encrypt()
 			encryptionMethod = '%';
 			break;
 		}
-	} while (encryptionMethod == '%');
+	} while (encryptionMethod == '%');	//Schleifenende
 }
 
 void decrypt()
@@ -132,18 +131,20 @@ void decrypt()
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
 
-	switch (selection)
-	{
-	case '1':
-		encryptor->encryptXOR(path,savePathChar);  //XOR entschluesseln
-		break;
-	case '2':
-		encryptor->decryptAES(path, savePathChar);  //AES entschluesseln
-		break;
-	case '3':
-		encryptor->decryptCesar(path, savePathChar);  //Cesar entschluesseln
-		break;
-	default:
-		break;
-	}
+	do {							//Schleife für korrekte Eingabe
+		switch (selection)
+		{
+		case '1':
+			encryptor->encryptXOR(path, savePathChar);  //XOR entschluesseln
+			break;
+		case '2':
+			encryptor->decryptAES(path, savePathChar);  //AES entschluesseln
+			break;
+		case '3':
+			encryptor->decryptCesar(path, savePathChar);  //Cesar entschluesseln
+			break;
+		default:
+			break;
+		}
+	} while (selection != '1' && selection != '2' && selection != '3'); //Schleifenende
 }

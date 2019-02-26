@@ -17,7 +17,7 @@ Encryptor::~Encryptor()
 }
 
 
-//***** Methode für XOR Verschlüsselung *****//
+//***** Methode für XOR Verschluesselung *****//
 void Encryptor::encryptXOR(char* sourcePath, const char* output)
 {
 // Initialisierung der lokalen Variablen
@@ -25,21 +25,21 @@ void Encryptor::encryptXOR(char* sourcePath, const char* output)
 	fstream fout;
 	char key[10];			// Array für verwendetes Passwort
 	char rawData;			// Character-Variable für das originale Zeichen
-	char encData;			// Character-Variable für das verschlüsselte Zeichen
-	int count = 0;			// Zählvariable
+	char encData;			// Character-Variable für das verschluesselte Zeichen
+	int count = 0;			// Zaehlvariable
 
 	cout << "Please enter an Key up to 10 Digits" << endl;
 	cin >> key;				// Einlesen des Passworts
 
-	fout.open(output, ios::out);	// Öffnen der Ausgabedatei
+	fout.open(output, ios::out);	// Oeffnen der Ausgabedatei
 
 	cout << "------------------------------ENCRYPTED------------------------------" << endl;
 
 		while (fin.get(rawData))	// Einlesen eines Zeichens
 	{
-		encData = int(rawData) ^ ( (int)key[count % sizeof(key)] +96);	// XOR Verknüpfung
+		encData = int(rawData) ^ ( (int)key[count % sizeof(key)] +96);	// XOR Verknuepfung
 		cout << rawData;			
-		fout << (char)encData;		// Schreibvorgang des verschlüsselten Zeichens
+		fout << (char)encData;		// Schreibvorgang des verschluesselten Zeichens
 		count++;
 	}
 	cout << endl;
@@ -47,7 +47,7 @@ void Encryptor::encryptXOR(char* sourcePath, const char* output)
 	fin.close();			// Schließen der Originaldatei
 }
 
-
+//***** Methode für AES Verschluesselung *****//
 SecByteBlock key(0x00, AES::DEFAULT_KEYLENGTH); //Variable für den AES-Key
 SecByteBlock iv(AES::BLOCKSIZE); //Variable für den Initialisierungs Vektor
 
@@ -170,6 +170,7 @@ void Encryptor::decryptAES(char* sourcePath, const char* output)
 	delete[] plainText;  //Loeschen des plainText Arrays um Speicher wieder freizugeben
 }
 
+//***** Methode für Caesar Verschluesselung *****//
 // DEFINITION 
 char inputData;
 
